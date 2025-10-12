@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RiLockPasswordLine, RiMailLine } from 'react-icons/ri';
+import axios from 'axios';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -16,32 +17,56 @@ const LoginScreen = () => {
       return;
     }
     
-    const url = `http://localhost:5000/api/v1/login`;
+    // const url = `https://devserver-main--umsbackend.netlify.app/api/v1/login`;
 
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ username:email, password }),
-                    });
+    //             try {
+    //                 const response = await axios(url, {
+    //                     method: 'POST',
+    //                     headers: {
+    //                         'Content-Type': 'application/json',
+    //                         'Accept': 'application/json',
+    //                         'Access-Control-Allow-Origin': '*',
+    //                     },
+    //                     body: JSON.stringify({ username:email, password }),
+    //                 });
 
-                    const data = await response.json();
+    //                 const data = await response.json();
 
-                    if (response.ok) {
-                      console.log('login',data);
-                      navigate('/dashboard');
-                            // Login Success: Show the success card
+    //                 if (response.ok) {
+    //                   console.log('login',data);
+    //                   localStorage.setItem("userData", JSON.stringify(data));
+
+    //                   navigate('/dashboard');
+    //                         // Login Success: Show the success card
                         
-                    } else {
-                        // API returned an error status (400, 401, 409, 500 etc.)
-                    }
+    //                 } else {
+    //                     // API returned an error status (400, 401, 409, 500 etc.)
+    //                 }
 
-                }
-                catch (error){
+    //             }
+    //             catch (error){
 
-                }
+    //             }
+    const url = `https://devserver-main--umsbackend.netlify.app/api/v1/login`;
+
+try {
+  const response = await axios.post(url, {
+    username: email,
+    password: password
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+
+    }
+  });
+
+  console.log('Login success:', response.data);
+} catch (error) {
+  console.error('Login error:', error);
+}
+
     // 2. Mock Authentication (Replace with actual API call)
     console.log('Attempting login:', { email, password });
     

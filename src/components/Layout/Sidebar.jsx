@@ -1,11 +1,11 @@
 // src/components/Layout/Sidebar.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 // Install react-icons: npm install react-icons
 import { 
   RiDashboardLine, RiAccountBoxLine, RiUserLine, 
   RiTeamLine, RiSettingsLine, RiArrowDownSLine, 
-  RiArrowUpSLine, RiBookletLine 
+  RiArrowUpSLine, RiBookletLine ,
 } from 'react-icons/ri'; 
 
 // Define the navigation structure
@@ -13,7 +13,7 @@ const sidebarData = [
   { 
     title: 'Dashboard', 
     icon: <RiDashboardLine />, 
-    path: '/', 
+    path: '/dashboard', 
     key: 'dashboard' 
   },
   {
@@ -33,7 +33,7 @@ const sidebarData = [
     key: 'students',
     subItems: [
       { title: 'View All Students', path: '/students/all', key: 'all' },
-      { title: 'Registered Students', path: '/students/registered', key: 'registered' },
+      // { title: 'Registered Students', path: '/students/registered', key: 'registered' },
       // ... other student sub-routes
     ],
   },
@@ -42,8 +42,40 @@ const sidebarData = [
     icon: <RiAccountBoxLine />,
     key: 'accounts',
     subItems: [
-      { title: 'Paid Students', path: '/accounts/paid', key: 'paid' },
-      { title: 'Partially Paid', path: '/accounts/partial', key: 'partial' },
+      // { title: 'Paid Students', path: '/accounts/paid', key: 'paid' },
+      // { title: 'Partially Paid', path: '/accounts/partial', key: 'partial' },
+      { title: 'Wallet Summary', path: '/accounts/wallet', key: 'wallet' }, // Screenshot 6.35.46 AM.png
+      // ... other account sub-routes
+    ],
+  },
+  { title: 'Course', icon: <RiTeamLine />, path: '/course', key: 'team' },
+  // { title: 'Settings', icon: <RiSettingsLine />, path: '/settings', key: 'settings' },
+];
+const sidebarDataCenter = [
+  { 
+    title: 'Dashboard', 
+    icon: <RiDashboardLine />, 
+    path: '/dashboard', 
+    key: 'dashboard' 
+  },
+  
+  {
+    title: 'Students',
+    icon: <RiBookletLine />,
+    key: 'students',
+    subItems: [
+      { title: 'View All Students', path: '/students/all', key: 'all' },
+      // { title: 'Registered Students', path: '/students/registered', key: 'registered' },
+      // ... other student sub-routes
+    ],
+  },
+  {
+    title: 'Accounts',
+    icon: <RiAccountBoxLine />,
+    key: 'accounts',
+    subItems: [
+      // { title: 'Paid Students', path: '/accounts/paid', key: 'paid' },
+      // { title: 'Partially Paid', path: '/accounts/partial', key: 'partial' },
       { title: 'Wallet Summary', path: '/accounts/wallet', key: 'wallet' }, // Screenshot 6.35.46 AM.png
       // ... other account sub-routes
     ],
@@ -52,11 +84,13 @@ const sidebarData = [
   { title: 'Settings', icon: <RiSettingsLine />, path: '/settings', key: 'settings' },
 ];
 
+
 const SidebarItem = ({ item }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const hasSubItems = item.subItems && item.subItems.length > 0;
   
+
   // Check if any sub-item is currently active to keep the parent open
   const isActiveParent = hasSubItems 
     ? item.subItems.some(sub => location.pathname === sub.path) 
@@ -123,6 +157,16 @@ const SidebarItem = ({ item }) => {
 };
 
 const Sidebar = () => {
+  const [user,setUser]=useState(null)
+useEffect(() => {
+  getUserDetail()
+}, [])
+const getUserDetail=async()=>{
+  let userDetail= localStorage.getItem('userData')
+  let parseUserDetail= await JSON.parse(userDetail)
+  setUser(parseUserDetail.user)
+  console.log('parseUserDetail',parseUserDetail.user);
+}
   return (
     <div className="w-60 bg-teal-900 h-screen fixed top-0 left-0 overflow-y-auto shadow-xl">
       <div className="p-4 border-b border-teal-700">
@@ -131,9 +175,16 @@ const Sidebar = () => {
         <p className="text-xs text-gray-400">Amity Online</p>
       </div>
       <nav className="mt-4">
-        {sidebarData.map(item => (
+        {
+        user?.type ==='Admin'?
+        sidebarData.map(item => (
           <SidebarItem key={item.key} item={item} />
-        ))}
+        ))
+        :
+        sidebarDataCenter.map(item => (
+          <SidebarItem key={item.key} item={item} />
+        )
+        )}
       </nav>
       
       {/* Footer/Logout section */}

@@ -1,9 +1,20 @@
 // src/components/Layout/Header.jsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RiSearchLine, RiNotification2Line, RiUser2Line, RiArrowDownSLine } from 'react-icons/ri';
 
 const Header = () => {
+  const [user,setUser]=useState(null)
+  useEffect(() => {
+    getUserDetail()
+  }, [])
+  const getUserDetail=async()=>{
+    let userDetail= localStorage.getItem('userData')
+    let parseUserDetail= await JSON.parse(userDetail)
+    setUser(parseUserDetail.user)
+    console.log('parseUserDetail',parseUserDetail.user);
+  }
+  
   return (
     <header className="fixed top-0 left-60 right-0 bg-white shadow-md z-10 h-16 flex items-center justify-between px-6">
       <div className="flex items-center space-x-4">
@@ -33,8 +44,8 @@ const Header = () => {
         <div className="flex items-center space-x-2 cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition-colors">
           <RiUser2Line className="text-3xl text-teal-600 border rounded-full p-1" />
           <div className="flex flex-col text-sm">
-            <span className="font-medium text-gray-800">Admin User</span>
-            <span className="text-xs text-gray-500">Center Head</span>
+            <span className="font-medium text-gray-800">{user?.type === 'Admin'?'Admin User':'Center User'}</span>
+            <span className="text-xs text-gray-500">{user?.type === 'Admin'? 'Center Head':'Center'}</span>
           </div>
           <RiArrowDownSLine className="text-lg text-gray-500" />
         </div>

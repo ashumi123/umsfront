@@ -1,109 +1,12 @@
 
-// // src/pages/Students/ViewStudents.jsx - FIXED COLUMN KEY MISMATCH
-// import React, { useState, useEffect } from 'react';
-// import { useLocation, useNavigate } from 'react-router-dom'; // <-- Added useNavigate
-// import DataTable from '../../components/Tables/DataTable';
-// import Tabs from '../../components/UI/Tabs';
-// import axios from 'axios';
-
-// const API_URL = 'http://localhost:5000/api/v1/students';
-
-// // FIXED: Changed 'key' to 'accessor' to match DataTable.jsx
-// const columns = [
-//     { accessor: 'regNo', header: 'Reg No.', sortable: true },
-//     { accessor: 'nameCandidate', header: 'Student Name', sortable: true }, // Use nameCandidate from model
-//     { accessor: 'course', header: 'Course', sortable: true },
-//     { accessor: 'centerCode', header: 'Center Code', sortable: true },
-//     { accessor: 'status', header: 'Status', sortable: true },
-//     { accessor: 'regDate', header: 'Reg Date', sortable: true },
-// ];
-
-// const ViewStudents = () => {
-//     const [activeTab, setActiveTab] = useState('All Students');
-//     const [studentData, setStudentData] = useState([]);
-//     const [loading, setLoading] = useState(false);
-//     const [notification, setNotification] = useState(null);
-
-//     const location = useLocation();
-//     const navigate = useNavigate(); // <-- Initialized useNavigate
-
-//     const fetchStudents = async (statusFilter) => {
-//         setLoading(true);
-//         try {
-//             const statusParam = statusFilter === 'All Students' ? '' : `?status=${statusFilter}`;
-//             const response = await axios.get(`${API_URL}${statusParam}`);
-
-//             setStudentData(response.data.data);
-//         } catch (error) {
-//             console.error('Error fetching students:', error);
-//             setStudentData([]);
-//         } finally {
-//             setLoading(false);
-//         }
-//     };
-
-//     useEffect(() => {
-//         fetchStudents(activeTab);
-//     }, [activeTab]);
-
-//     useEffect(() => {
-//         if (location.state && location.state.successMessage) {
-//             setNotification(location.state.successMessage);
-
-//             const timer = setTimeout(() => {
-//                 setNotification(null);
-//                 window.history.replaceState({}, document.title);
-//             }, 5000);
-
-//             return () => clearTimeout(timer);
-//         }
-//     }, [location.state]);
-
-//     const handleNewEntry = () => {
-//         navigate('/students/register'); // Navigate to the new registration form
-//     };
-
-//     return (
-//         <div className="space-y-8">
-//             <h1 className="text-2xl font-bold text-gray-800 border-b pb-3">Student Enrollment List</h1>
-
-//             {notification && (
-//                 <div className="p-3 rounded-lg bg-green-500 text-white font-medium">
-//                     {notification}
-//                 </div>
-//             )}
-
-//             <div className="bg-white p-6 rounded-xl shadow-lg">
-//                 <Tabs
-//                     tabs={[{ label: 'All Students' }]}
-//                     activeTab={activeTab}
-//                     setActiveTab={setActiveTab}
-//                 />
-//                 {loading ? (
-//                     <p className="text-center py-8 text-lg text-teal-600">Loading student data...</p>
-//                 ) : (
-//                     <DataTable
-//                         data={studentData}
-//                         columns={columns}
-//                         onNewEntryClick={handleNewEntry} // <-- Pass the correct handler
-//                     />
-//                 )}
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default ViewStudents;
-
-// src/pages/Students/ViewStudents.jsx - MODIFIED for Approval Workflow
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import DataTable from '../../components/Tables/DataTable';
 import Tabs from '../../components/UI/Tabs';
 import axios from 'axios';
-import { RiCheckLine, RiCloseLine } from 'react-icons/ri';
+import { RiCheckLine, RiCloseLine,RiAddCircleLine } from 'react-icons/ri';
 
-const API_URL = 'http://localhost:5000/api/v1/students';
+const API_URL = 'https://devserver-main--umsbackend.netlify.app/api/v1/students';
 
 // MOCK USER ROLE: In a real app, this would come from an authentication context.
 const CURRENT_USER_ROLE = 'Admin'; // Change to 'Center' to test center view
@@ -124,7 +27,15 @@ const ViewStudents = () => {
   const [studentData, setStudentData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState(null);
-  
+  const [user,setUser]=useState(null)
+useEffect(() => {
+  getUserDetail()
+}, [])
+const getUserDetail=async()=>{
+  let userDetail= localStorage.getItem('userData')
+  let parseUserDetail= await JSON.parse(userDetail)
+  setUser(parseUserDetail.user)
+}
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -190,7 +101,7 @@ const ViewStudents = () => {
   // DataTable requires a custom render function for the Actions column
   const renderActions = (row) => {
     console.log(row);
-    if (CURRENT_USER_ROLE === 'Admin' && row?.approvalStatus === 'Pending') {
+    if (user?.type === 'Admin' && row?.approvalStatus === 'Pending') {
       return (
         <div className="flex space-x-2 px-6 py-4 whitespace-nowrap text-sm font-medium">
           <button 
@@ -219,17 +130,34 @@ const ViewStudents = () => {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-2xl font-bold text-gray-800 border-b pb-3">Student Enrollment List ({CURRENT_USER_ROLE} View)</h1>
+            <div className="flex justify-between items-center border-b pb-3">
 
+      <h1 className="text-2xl font-bold text-gray-800  pb-3">Student Enrollment List ({user?.type} View)</h1>
+      <button
+          onClick={() => navigate('/students/marks')}
+          className="flex items-center px-4 py-2 bg-teal-600 text-white text-sm font-medium rounded-lg shadow-md hover:bg-teal-700 transition-colors"
+        >
+          Student Certificate
+        </button>
+      <button
+          onClick={() => navigate('/students/register')}
+          className="flex items-center px-4 py-2 bg-teal-600 text-white text-sm font-medium rounded-lg shadow-md hover:bg-teal-700 transition-colors"
+        >
+          <RiAddCircleLine className="mr-2 w-5 h-5" />
+          Add New Student
+        </button>
+        </div>
       {notification && (
           <div className={`p-3 rounded-lg text-white font-medium ${notification.startsWith('✅') || notification.startsWith('🚀') ? 'bg-green-500' : 'bg-red-500'}`}>
               {notification}
           </div>
       )}
 
+
+
       <div className="bg-white p-6 rounded-xl shadow-lg">
         <Tabs
-          tabs={['All Students', 'Active', 'Registered', 'Graduated']}
+          tabs={[{ label: 'Student List', path: '/students/all' }] }       
           activeTab={activeTab}
           setActiveTab={setActiveTab}
         />

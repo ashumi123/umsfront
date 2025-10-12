@@ -89,7 +89,7 @@ import Card from '../../components/UI/Card';
 import DataTable from '../../components/Tables/DataTable';
 import { RiWalletLine, RiArrowDownCircleLine, RiArrowUpCircleLine } from 'react-icons/ri';
 
-const API_BASE = 'http://localhost:5000/api/v1/accounts';
+const API_BASE = 'https://devserver-main--umsbackend.netlify.app/api/v1/accounts';
 
 const columns = [
   { key: 'id', header: 'Txn ID', sortable: true },

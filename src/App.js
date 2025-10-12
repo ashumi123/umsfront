@@ -9,6 +9,8 @@ import ViewCenters from './pages/CenterManagement/ViewCenters';
 import ViewStudents from './pages/Students/ViewStudents';
 import StudentRegistration from './pages/Students/StudentRegistration';
 import WalletSummary from './pages/Accounts/WalletSummary'; 
+import CourseManagement from './pages/Course/courseManagement';
+import MarksAndCertificateManagement from './pages/Students/MarksAndCertificateManagement';
 // Import other pages as needed
 
 const App = () => {
@@ -30,9 +32,11 @@ const App = () => {
           
           {/* Student Routes */}
           <Route path="/students/all" element={<ViewStudents />} />
+          <Route path="/students/marks" element={<MarksAndCertificateManagement />} />
           <Route path="/students/register" element={<StudentRegistration />} />
           {/* Accounts Routes */}
           <Route path="/accounts/wallet" element={<WalletSummary />} />
+          <Route path="/course" element={<CourseManagement />} />
           
           {/* Fallback/404 Route */}
           <Route path="*" element={

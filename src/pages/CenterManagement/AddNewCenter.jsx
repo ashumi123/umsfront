@@ -154,7 +154,7 @@ import React, { useState } from 'react';
 import { RiSaveLine, RiArrowGoBackLine } from 'react-icons/ri';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/v1/centers';
+const API_URL = 'https://devserver-main--umsbackend.netlify.app/api/v1/centers';
 
 const initialFormData = {
     centerCode: '', name: '', email: '', mobile: '', city: '', address: '', status: 'Active'
