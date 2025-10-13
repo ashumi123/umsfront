@@ -7,8 +7,8 @@ import axios from 'axios';
 import { RiCheckLine, RiDownloadLine, RiEyeLine } from 'react-icons/ri';
 import CertificateTemplate from './CertificateTemplate';
 
-const API_URL = 'https://devserver-main--umsbackend.netlify.app/api/v1/students/studentsMarks/';
-const API_URL_STUDENT = 'https://devserver-main--umsbackend.netlify.app/api/v1/students/';
+const API_URL = 'https://umsbackend-l795.onrender.com/api/v1/students/studentsMarks/';
+const API_URL_STUDENT = 'https://umsbackend-l795.onrender.com/api/v1/students/';
 
 // Columns for the Marks Management Dashboard
 const columns = [

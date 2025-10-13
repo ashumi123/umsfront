@@ -6,7 +6,7 @@ import Tabs from '../../components/UI/Tabs';
 import axios from 'axios';
 import { RiCheckLine, RiCloseLine,RiAddCircleLine } from 'react-icons/ri';
 
-const API_URL = 'https://devserver-main--umsbackend.netlify.app/api/v1/students';
+const API_URL = 'https://umsbackend-l795.onrender.com/api/v1/students';
 
 // MOCK USER ROLE: In a real app, this would come from an authentication context.
 const CURRENT_USER_ROLE = 'Admin'; // Change to 'Center' to test center view

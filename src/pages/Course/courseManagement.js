@@ -3,7 +3,7 @@
 // import { RiSaveLine,RiDeleteBack2Fill } from 'react-icons/ri';
 
 // // IMPORTANT: Define your backend API URL for courses
-// const API_URL = 'https://devserver-main--umsbackend.netlify.app/api/v1/courses';
+// const API_URL = 'https://umsbackend-l795.onrender.com/api/v1/courses';
 
 // const initialFeeStructure = {
 //     registrationFee: 0,
@@ -283,7 +283,7 @@ import axios from 'axios';
 import { RiSaveLine,RiDeleteBack2Fill, RiEdit2Fill,RiCrossFill, RiAddBoxFill, RiRotateLockFill } from 'react-icons/ri';
 
 // IMPORTANT: Define your backend API URL for courses
-const API_URL = 'https://devserver-main--umsbackend.netlify.app/api/v1/courses';
+const API_URL = 'https://umsbackend-l795.onrender.com/api/v1/courses';
 
 const initialFeeStructure = {
     registrationFee: 0,

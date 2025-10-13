@@ -8,7 +8,7 @@ import {
   PieChart, Pie, Cell 
 } from 'recharts';
 
-const API_BASE = 'https://devserver-main--umsbackend.netlify.app/api/v1';
+const API_BASE = 'https://umsbackend-l795.onrender.com/api/v1';
 
 const COLORS = ['#14B8A6', '#3B82F6', '#8B5CF6', '#F59E0B', '#EF4444'];
 

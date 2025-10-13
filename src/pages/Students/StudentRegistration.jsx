@@ -5,7 +5,7 @@
 // // import axios from 'axios';
 
 // // // IMPORTANT: Define your backend API URL
-// // const API_URL = 'https://devserver-main--umsbackend.netlify.app/api/v1/students';
+// // const API_URL = 'https://umsbackend-l795.onrender.com/api/v1/students';
 
 // // // Mock initial data structure matching the backend schema
 // // const initialFormData = {
@@ -259,7 +259,7 @@
 // import { RiSaveLine } from 'react-icons/ri';
 
 // // IMPORTANT: Define your backend API URL
-// const API_URL = 'https://devserver-main--umsbackend.netlify.app/api/v1/students';
+// const API_URL = 'https://umsbackend-l795.onrender.com/api/v1/students';
 
 // // --- Helper Components (MUST be defined outside the main component) ---
 
@@ -534,9 +534,9 @@ import axios from 'axios';
 import { RiAddBoxLine, RiDeleteBackFill, RiDeleteBin2Fill, RiSaveLine } from 'react-icons/ri';
 
 // IMPORTANT: Define your backend API URLs
-const API_URL = 'https://devserver-main--umsbackend.netlify.app/api/v1/students';
+const API_URL = 'https://umsbackend-l795.onrender.com/api/v1/students';
 // New API URL for fetching courses
-const COURSES_API_URL = 'https://devserver-main--umsbackend.netlify.app/api/v1/courses';
+const COURSES_API_URL = 'https://umsbackend-l795.onrender.com/api/v1/courses';
 
 // --- Helper Components ---
 

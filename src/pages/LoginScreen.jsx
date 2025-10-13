@@ -9,15 +9,15 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin =async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     // 1. Basic Validation (In a real app, use Formik/React Hook Form)
     if (!email || !password) {
       alert("Please enter both email and password.");
       return;
     }
-    
-    // const url = `https://devserver-main--umsbackend.netlify.app/api/v1/login`;
+
+    // const url = `https://umsbackend-l795.onrender.com/api/v1/login`;
 
     //             try {
     //                 const response = await axios(url, {
@@ -38,7 +38,7 @@ const LoginScreen = () => {
 
     //                   navigate('/dashboard');
     //                         // Login Success: Show the success card
-                        
+
     //                 } else {
     //                     // API returned an error status (400, 401, 409, 500 etc.)
     //                 }
@@ -47,37 +47,39 @@ const LoginScreen = () => {
     //             catch (error){
 
     //             }
-    const url = `https://devserver-main--umsbackend.netlify.app/api/v1/login`;
+    const url = `https://umsbackend-l795.onrender.com/api/v1/login`;
 
-try {
-  const response = await axios.post(url, {
-    username: email,
-    password: password
-  }, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Access-Control-Allow-Origin': '*'
+    try {
+      const response = await axios.post(url, {
+        username: email,
+        password: password
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Client': "PCZHa6ZdpS-0kK6wndJrDQJ6cTh739F0vhKMCD1Hahk",
+          "Secret-key": "C9Gyp5T8CE0tjcyZeHwnTBL4IgV6XIgRrJJMFKkNWTA"
 
+        }
+      });
+
+      console.log('Login success:', response.data);
+    } catch (error) {
+      console.error('Login error:', error);
     }
-  });
-
-  console.log('Login success:', response.data);
-} catch (error) {
-  console.error('Login error:', error);
-}
 
     // 2. Mock Authentication (Replace with actual API call)
     console.log('Attempting login:', { email, password });
-    
+
     // Simulate successful login and redirect to the dashboard
-     
+
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-teal-50">
       <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
-        
+
         <div className="text-center mb-8">
           {/* Placeholder for University Logo */}
           <h1 className="text-3xl font-bold text-teal-700">UMS Portal</h1>
@@ -116,7 +118,7 @@ try {
               />
             </div>
           </div>
-          
+
           <div className="flex justify-end text-sm">
             <a href="/forgot-password" className="text-teal-600 hover:text-teal-800">
               Forgot Password?

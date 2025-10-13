@@ -6,7 +6,7 @@ import { RiAddCircleLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Ensure you have installed axios
 
-const API_URL = 'https://devserver-main--umsbackend.netlify.app/api/v1/centers';
+const API_URL = 'https://umsbackend-l795.onrender.com/api/v1/centers';
 
 // Defines the columns for the DataTable component
 const columns = [
