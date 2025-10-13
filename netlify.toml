@@ -3,3 +3,8 @@
   to = "https://umsbackend-l795.onrender.com/api/:splat"
   status = 200
   force = true
+# ✅ SPA routing fix (important)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
