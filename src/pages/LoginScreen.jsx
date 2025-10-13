@@ -56,12 +56,11 @@ const LoginScreen = () => {
       }, {
         headers: {
           'Content-Type': 'application/json',
-          
-
         }
       });
 
       console.log('Login success:', response.data);
+      localStorage.setItem("userData", JSON.stringify(response.data));
       navigate('/dashboard')
     } catch (error) {
       console.error('Login error:', error);

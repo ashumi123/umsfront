@@ -11,7 +11,7 @@ const Header = () => {
     let userDetail= localStorage.getItem('userData')
     let parseUserDetail= await JSON.parse(userDetail)
     setUser(parseUserDetail?.user)
-    console.log('parseUserDetail',parseUserDetail?.user);
+    console.log('parseUserDetail',parseUserDetail);
   }
   
   return (
