@@ -28,10 +28,18 @@ const Dashboard = () => {
           enrollmentRes, 
           distributionRes
         ] = await Promise.all([
-          axios.get(`${API_BASE}/centers/summary`),
-          axios.get(`${API_BASE}/accounts/summary`),
-          axios.get(`${API_BASE}/students/enrollment-data`),
-          axios.get(`${API_BASE}/students/course-distribution`),
+          axios.get(`${API_BASE}/centers/summary`,{headers: {
+            'Content-Type': 'application/json',
+          }}),
+          axios.get(`${API_BASE}/accounts/summary`,{headers: {
+            'Content-Type': 'application/json',
+          }}),
+          axios.get(`${API_BASE}/students/enrollment-data`,{headers: {
+            'Content-Type': 'application/json',
+          }}),
+          axios.get(`${API_BASE}/students/course-distribution`,{headers: {
+            'Content-Type': 'application/json',
+          }}),
         ]);
 
         setSummary({
