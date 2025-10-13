@@ -47,7 +47,7 @@ const LoginScreen = () => {
     //             catch (error){
 
     //             }
-    const url = `http://localhost:5000/api/v1/login`;
+    const url = `https://umsbackend-l795.onrender.com/api/v1/login`;
 
     try {
       const response = await axios.post(url, {
