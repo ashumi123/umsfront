@@ -1,6 +1,5 @@
 // src/components/Layout/Header.jsx
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { RiSearchLine, RiNotification2Line, RiUser2Line, RiArrowDownSLine } from 'react-icons/ri';
 
 const Header = () => {
