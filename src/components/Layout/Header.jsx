@@ -10,8 +10,8 @@ const Header = () => {
   const getUserDetail=async()=>{
     let userDetail= localStorage.getItem('userData')
     let parseUserDetail= await JSON.parse(userDetail)
-    setUser(parseUserDetail.user)
-    console.log('parseUserDetail',parseUserDetail.user);
+    setUser(parseUserDetail?.user)
+    console.log('parseUserDetail',parseUserDetail?.user);
   }
   
   return (

@@ -47,7 +47,7 @@ const LoginScreen = () => {
     //             catch (error){
 
     //             }
-    const url = `https://umsbackend-l795.onrender.com/api/v1/login`;
+    const url = `http://localhost:5000/api/v1/login`;
 
     try {
       const response = await axios.post(url, {
@@ -56,15 +56,13 @@ const LoginScreen = () => {
       }, {
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Client': "PCZHa6ZdpS-0kK6wndJrDQJ6cTh739F0vhKMCD1Hahk",
-          "Secret-key": "C9Gyp5T8CE0tjcyZeHwnTBL4IgV6XIgRrJJMFKkNWTA"
+          
 
         }
       });
 
       console.log('Login success:', response.data);
+      navigate('/dashboard')
     } catch (error) {
       console.error('Login error:', error);
     }
