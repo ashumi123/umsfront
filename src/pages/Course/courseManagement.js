@@ -304,6 +304,8 @@ const initialSubject = {
 const initialFormData = {
     name: '', // Full Course Name (e.g., Bachelor of Computer Applications)
     value: '', // Course Code (e.g., BCA)
+    school: '', // Course Code (e.g., BCA)
+    department: '', // Course Code (e.g., BCA)
     feeStructure: initialFeeStructure,
     subjects: [], // NEW: Array to hold subject objects
 };
@@ -529,7 +531,8 @@ const CourseManagement = () => {
             name: course.name,
             value: course.value,
             feeStructure: { ...course.feeStructure },
-            subjects: course.subjects ? [...course.subjects] : [], 
+            subjects: course.subjects ? [...course.subjects] : [],
+            school:course?.school?course?.school:''
         });
     };
 
@@ -601,6 +604,23 @@ const CourseManagement = () => {
                                 required 
                                 disabled={!!editingCourse} 
                             />
+                            <InputField 
+                                label="School" 
+                                name="school" 
+                                value={formData.school} 
+                                onChange={handleChange} 
+                                required 
+                                disabled={!!editingCourse} 
+                            />
+                            <InputField 
+                                label="Department" 
+                                name="department" 
+                                value={formData.department} 
+                                onChange={handleChange} 
+                                required 
+                                disabled={!!editingCourse} 
+                            />
+                            
                             <div className="col-span-1">
                                 <label className="block text-xs font-medium text-gray-700 mb-1">Total Course Fee</label>
                                 <div className="w-full border border-teal-500 bg-teal-50 text-teal-800 rounded-lg shadow-sm p-3 text-sm font-semibold flex items-center h-full">
