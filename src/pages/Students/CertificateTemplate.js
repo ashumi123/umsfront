@@ -17,6 +17,8 @@ const CertificateTemplate = ({ studentData }) => {
 
   // Calculate totals
   const totalCredits = studentData.subjects.reduce((sum, s) => sum + (s.credit || 0), 0);
+  const totalGrade = studentData.subjects.reduce((sum, s) => {
+   return sum + (calculateGrade(s) || 1)}, 0);
   
   // Calculate total marks obtained (assuming required fields are present in data structure)
   const totalInternalMarksObtained = studentData.subjects.reduce((sum, s) => sum + (s.internalMarks || 0), 0);
@@ -32,7 +34,18 @@ const CertificateTemplate = ({ studentData }) => {
   const grandTotalMin = totalInternalMin + totalExternalMin;
   const grandTotalMax = totalInternalMax + totalExternalMax;
 
-
+  function calculateGrade(subject) {
+    const totalMarks = subject.internalMarks + subject.externalMarks;
+    
+    // Grade = floor(totalMarks / 10) + 1
+    // Example: 0-9 -> 1, 10-19 -> 2, ..., 90-99 -> 10, 100 -> 11
+    let grade = Math.floor(totalMarks / 10) + 1;
+  
+    // Cap the maximum grade to 11 (for 100 marks)
+    if (grade > 10) grade = 10;
+  
+    return grade;
+  }
   return (
     <div className="max-w-6xl mx-auto p-8 bg-white border-4 border-double border-gray-900 shadow-2xl font-serif">
       <div className="text-center mb-8">
@@ -89,7 +102,7 @@ const CertificateTemplate = ({ studentData }) => {
               const internalMinMax = `${subject.internalMin || 16}/${subject.internalMax || 40}`;
               const externalMinMax = `${subject.externalMin || 24}/${subject.externalMax || 60}`;
               const totalObtained = subject.internalMarks + subject.externalMarks;
-
+              const grade=calculateGrade(subject)
               return (
                 <tr key={index}>
                   <td className="px-2 py-1 text-left text-gray-800 border-r border-gray-400">{subject.subjectCode}</td>
@@ -100,8 +113,8 @@ const CertificateTemplate = ({ studentData }) => {
                   <td className="px-2 py-1 text-center text-gray-800 border-r border-gray-400">{externalMinMax}</td>
                   <td className="px-2 py-1 text-center text-gray-800 border-r border-gray-400">{subject.externalMarks}</td>
                   <td className="px-2 py-1 text-center text-gray-800 border-r border-gray-400 font-medium">{totalObtained}</td>
-                  <td className="px-2 py-1 text-center text-gray-800 border-r border-gray-400">{subject.gradePoint}</td>
-                  <td className="px-2 py-1 text-center text-gray-800">{subject.earnedCredit}</td>
+                  <td className="px-2 py-1 text-center text-gray-800 border-r border-gray-400">{grade}</td>
+                  <td className="px-2 py-1 text-center text-gray-800">{subject.credit}</td>
                 </tr>
               );
             })}
@@ -114,7 +127,7 @@ const CertificateTemplate = ({ studentData }) => {
               <td className="px-2 py-1 text-center border-r border-t border-gray-400">{totalExternalMin}/{totalExternalMax}</td>
               <td className="px-2 py-1 text-center border-r border-t border-gray-400">{totalExternalMarksObtained}</td>
               <td className="px-2 py-1 text-center border-r border-t border-gray-400">{totalMarksObtained}</td>
-              <td className="px-2 py-1 text-center border-r border-t border-gray-400">{getStudentInfo('overallGradePoint', '7')}</td>
+              <td className="px-2 py-1 text-center border-r border-t border-gray-400">{getStudentInfo('overallGradePoint', Math.round(totalGrade/studentData.subjects?.length))}</td>
               <td className="px-2 py-1 text-center border-t border-gray-400">{getStudentInfo('totalEarnedCredit', totalCredits)}</td>
             </tr>
           </tbody>
@@ -124,7 +137,7 @@ const CertificateTemplate = ({ studentData }) => {
       {/* SGPA / CGPA / Result */}
       <div className="text-sm font-semibold mb-6 space-y-1">
         <div className="flex justify-between max-w-lg">
-            <p><strong>SGPA</strong> &ndash;{studentData.sgpa ? studentData.sgpa?.toFixed?.(2) : 'NA'}</p>
+            <p><strong>SGPA</strong> &ndash;{totalGrade ? (totalGrade/studentData.subjects?.length)?.toFixed?.(2) : 'NA'}</p>
             <p><strong>CGPA</strong> &ndash;{studentData.cgpa ? studentData.cgpa?.toFixed?.(2) : 'NA'}</p>
         </div>
         <p><strong>Result:</strong> {getStudentInfo('finalResult', 'Passed and Promoted to Next Semester')}</p>

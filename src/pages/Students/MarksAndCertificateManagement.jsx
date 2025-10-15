@@ -136,16 +136,12 @@ const MarksAndCertificateManagement = () => {
 
     try {
         const response =await axios.post(`${API_URL_STUDENT}studentsMarksById`,{_id:student?._id})
-        console.log('response handleViewCertificate',response.data.data);
         setSelectedStudent(response.data.data[0]);
     setIsModalOpen(true);
     } catch (error) {
         
     }
 
-    console.log(student,'dsfds');
-    // setSelectedStudent(student);
-    // setIsModalOpen(true);
   };
 
   // DataTable custom render function for Actions column
