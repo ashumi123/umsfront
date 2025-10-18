@@ -277,7 +277,6 @@
 
 // export default CourseManagement;
 
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { RiSaveLine,RiDeleteBack2Fill, RiEdit2Fill,RiCrossFill, RiAddBoxFill, RiRotateLockFill } from 'react-icons/ri';
@@ -304,8 +303,8 @@ const initialSubject = {
 const initialFormData = {
     name: '', // Full Course Name (e.g., Bachelor of Computer Applications)
     value: '', // Course Code (e.g., BCA)
-    school: '', // Course Code (e.g., BCA)
-    department: '', // Course Code (e.g., BCA)
+    school: '', 
+    department: '', 
     feeStructure: initialFeeStructure,
     subjects: [], // NEW: Array to hold subject objects
 };
@@ -532,7 +531,8 @@ const CourseManagement = () => {
             value: course.value,
             feeStructure: { ...course.feeStructure },
             subjects: course.subjects ? [...course.subjects] : [],
-            school:course?.school?course?.school:''
+            school:course?.school?course?.school:'',
+            department:course?.department?course?.department:''
         });
     };
 
@@ -545,7 +545,7 @@ const CourseManagement = () => {
         setError('');
     };
     
-    // --- Delete Handlers (omitted for brevity, assume they remain) ---
+    // --- Delete Handlers ---
     const confirmDeletion = (courseId, courseName) => {
         setConfirmDelete({ id: courseId, name: courseName });
     };
@@ -610,7 +610,6 @@ const CourseManagement = () => {
                                 value={formData.school} 
                                 onChange={handleChange} 
                                 required 
-                                disabled={!!editingCourse} 
                             />
                             <InputField 
                                 label="Department" 
@@ -618,7 +617,6 @@ const CourseManagement = () => {
                                 value={formData.department} 
                                 onChange={handleChange} 
                                 required 
-                                disabled={!!editingCourse} 
                             />
                             
                             <div className="col-span-1">
@@ -645,8 +643,8 @@ const CourseManagement = () => {
                             ))}
                         </div>
                     
-                        {/* Action Buttons */}
-                        <div className="pt-6 flex justify-end space-x-4 border-t pt-4">
+                        {/* Action Buttons - FIX APPLIED HERE */}
+                        <div className="pt-6 flex flex-wrap justify-end gap-3 border-t pt-4"> 
                             {editingCourse && (
                                 <button
                                     type="button"
@@ -770,7 +768,8 @@ const CourseManagement = () => {
                 {/* --- 2. EXISTING COURSES LIST --- */}
                 <SectionHeader title="Existing Courses" />
                 
-                {/* ... Refresh button and loading/empty state */}
+                {isLoading && <p className="text-center text-teal-600 font-semibold py-4">Loading courses...</p>}
+                {!isLoading && courses.length === 0 && <p className="text-center text-gray-500 py-4">No courses registered yet. Add one above!</p>}
 
                 {!isLoading && courses.length > 0 && (
                     <div className="overflow-x-auto shadow-xl rounded-xl mt-4 border border-gray-100">
