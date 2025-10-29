@@ -276,10 +276,9 @@
 // };
 
 // export default CourseManagement;
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { RiSaveLine,RiDeleteBack2Fill, RiEdit2Fill,RiCrossFill, RiAddBoxFill, RiRotateLockFill } from 'react-icons/ri';
+import { RiSaveLine,RiDeleteBack2Fill, RiEdit2Fill,RiCrossFill, RiAddBoxFill, RiRotateLockFill, RiFileExcel2Fill } from 'react-icons/ri'; // Import new icon
 
 // IMPORTANT: Define your backend API URL for courses
 const API_URL = 'https://umsbackend-l795.onrender.com/api/v1/courses';
@@ -373,9 +372,8 @@ const CourseManagement = () => {
         }
     };
 
-    // --- Form Handlers ---
+    // --- Form Handlers (Omitted for brevity, assume they are the same as in the original code) ---
     
-    // Handler for course details and fees
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name in initialFeeStructure) {
@@ -391,10 +389,8 @@ const CourseManagement = () => {
         }
     };
     
-    // NEW: Handler for Subject input fields
     const handleSubjectChange = (e) => {
         const { name, value } = e.target;
-        // Keep non-numeric fields as strings, convert others to numbers
         const typedValue = (name === 'subjectName' || name === 'subjectCode') 
             ? value : parseFloat(value) < 0 ? 0 : parseFloat(value) || 0;
 
@@ -404,15 +400,12 @@ const CourseManagement = () => {
         }));
     };
 
-    // NEW: Handler to add or update a subject in formData.subjects
     const handleAddOrUpdateSubject = () => {
-        // Basic validation
         if (!newSubject.subjectName || !newSubject.subjectCode || newSubject.credit <= 0 || (newSubject.internalMax + newSubject.externalMax) <= 0) {
             setError('Please complete all subject fields and ensure credit/total marks are greater than 0.');
             return;
         }
 
-        // Check for duplicate codes (only if adding or if code is changed)
         const isDuplicate = formData.subjects.some((s, index) => 
             s.subjectCode.toUpperCase() === newSubject.subjectCode.toUpperCase() && index !== editingSubjectIndex
         );
@@ -422,60 +415,51 @@ const CourseManagement = () => {
             return;
         }
 
-        setError(''); // Clear subject-related errors
+        setError(''); 
 
         setFormData(prev => {
             const updatedSubjects = [...prev.subjects];
             
-            // Standardize code and create payload
             const subjectPayload = {
                 ...newSubject,
                 subjectCode: newSubject.subjectCode.toUpperCase()
             };
 
             if (editingSubjectIndex !== null) {
-                // Update existing subject
                 updatedSubjects[editingSubjectIndex] = subjectPayload;
             } else {
-                // Add new subject
                 updatedSubjects.push(subjectPayload);
             }
 
             return { ...prev, subjects: updatedSubjects };
         });
 
-        // Reset subject form
         setNewSubject(initialSubject);
         setEditingSubjectIndex(null);
     };
 
-    // NEW: Handler to start editing a subject
     const startEditSubject = (subject, index) => {
         setNewSubject(subject);
         setEditingSubjectIndex(index);
         setError('');
     };
 
-    // NEW: Handler to cancel subject edit/add
     const cancelSubjectEdit = () => {
         setNewSubject(initialSubject);
         setEditingSubjectIndex(null);
         setError('');
     }
 
-    // NEW: Handler to remove a subject
     const removeSubject = (index) => {
         setFormData(prev => ({
             ...prev,
             subjects: prev.subjects.filter((_, i) => i !== index)
         }));
-        // If the subject being edited is removed, cancel edit mode for the subject
         if (editingSubjectIndex === index) {
             cancelSubjectEdit();
         }
     };
     
-    // Unified Save (Create/Update) Handler
     const handleSave = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -494,7 +478,6 @@ const CourseManagement = () => {
                 return;
             }
             if (formData.subjects.length === 0) {
-                 // Warning, but allow empty courses for flexible setup
                  console.warn("Saving course with no subjects.");
             }
 
@@ -518,14 +501,12 @@ const CourseManagement = () => {
         }
     };
     
-    // Update startEdit to load subjects and clear subject states
     const startEdit = (course) => {
         setEditingCourse(course);
         setMessage('');
         setError('');
-        cancelSubjectEdit(); // Clear subject form
+        cancelSubjectEdit(); 
         
-        // Populate form data for editing, ensuring subjects is an array
         setFormData({
             name: course.name,
             value: course.value,
@@ -536,7 +517,6 @@ const CourseManagement = () => {
         });
     };
 
-    // Update handleCancelEdit to clear subject states
     const handleCancelEdit = () => {
         setEditingCourse(null);
         setFormData(initialFormData);
@@ -545,7 +525,6 @@ const CourseManagement = () => {
         setError('');
     };
     
-    // --- Delete Handlers ---
     const confirmDeletion = (courseId, courseName) => {
         setConfirmDelete({ id: courseId, name: courseName });
     };
@@ -569,6 +548,61 @@ const CourseManagement = () => {
     // Calculate total fees
     const totalFee = Object.values(formData.feeStructure).reduce((sum, fee) => sum + (fee || 0), 0);
     
+    // --- NEW: CSV Export Handler ---
+    const handleExportToCSV = () => {
+        if (courses.length === 0) {
+            alert("No courses to export.");
+            return;
+        }
+
+        // 1. Define CSV Headers
+        const headers = [
+            "Course Name", "Course Code", "School", "Department", 
+            "Registration Fee (₹)", "Admission Fee (₹)", "Tuition Fee (₹)", 
+            "Enrollment Fee (₹)", "Total Fee (₹)", "Total Subjects"
+        ];
+        
+        // 2. Format the data rows
+        const csvRows = courses.map(course => {
+            const fees = course.feeStructure;
+            const totalFeeValue = Object.values(fees).reduce((sum, fee) => sum + (fee || 0), 0);
+            const subjectCount = course.subjects?.length || 0;
+
+            return [
+                `"${course.name.replace(/"/g, '""')}"`, // Escape quotes in strings
+                course.value,
+                `"${(course.school || '').replace(/"/g, '""')}"`,
+                `"${(course.department || '').replace(/"/g, '""')}"`,
+                fees.registrationFee,
+                fees.admissionFee,
+                fees.tuitionFee,
+                fees.enrollmentFee,
+                totalFeeValue,
+                subjectCount
+            ].join(','); // Join fields with a comma
+        });
+
+        // 3. Combine headers and rows
+        const csvContent = [
+            headers.join(','),
+            ...csvRows
+        ].join('\n'); // Join rows with a newline
+
+        // 4. Trigger the download
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'Course_Data_Export.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setMessage('✅ Course data exported successfully!');
+        setTimeout(() => setMessage(''), 3000); // Clear message after 3 seconds
+    };
+    // --- End CSV Export Handler ---
+    
     // --- Render ---
     return (
         <div className="bg-gray-50 min-h-screen p-6 sm:p-8">
@@ -577,7 +611,7 @@ const CourseManagement = () => {
                     Admin: Course & Fee Management
                 </h1>
 
-                {/* Feedback Messages */}
+                {/* Feedback Messages (Same as original) */}
                 {(message || error) && (
                     <div className={`p-4 rounded-xl mb-6 font-medium shadow-md ${
                         message ? 'bg-green-100 text-green-800 border-l-4 border-green-500' : 'bg-red-100 text-red-800 border-l-4 border-red-500'
@@ -586,7 +620,7 @@ const CourseManagement = () => {
                     </div>
                 )}
 
-                {/* --- 1. NEW/EDIT COURSE FORM --- */}
+                {/* --- 1. NEW/EDIT COURSE FORM (Same as original) --- */}
                 <SectionHeader title={editingCourse ? `Editing Course: ${editingCourse.name}` : "Register New Course"} />
                 
                 <div className="space-y-6 p-6 border border-teal-200 rounded-xl bg-white shadow-inner">
@@ -643,7 +677,7 @@ const CourseManagement = () => {
                             ))}
                         </div>
                     
-                        {/* Action Buttons - FIX APPLIED HERE */}
+                        {/* Action Buttons */}
                         <div className="pt-6 flex flex-wrap justify-end gap-3 border-t pt-4"> 
                             {editingCourse && (
                                 <button
@@ -671,7 +705,7 @@ const CourseManagement = () => {
                         </div>
                     </form>
                     
-                    {/* --- Subject Management Section --- */}
+                    {/* --- Subject Management Section (Same as original) --- */}
                     <SectionHeader title="Subject Management" />
                     <div className="space-y-4 p-4 border border-blue-200 rounded-xl bg-blue-50">
                         <h3 className="text-lg font-semibold text-blue-800">
@@ -766,7 +800,19 @@ const CourseManagement = () => {
                 </div> {/* End of form container */}
 
                 {/* --- 2. EXISTING COURSES LIST --- */}
-                <SectionHeader title="Existing Courses" />
+                <div className="flex justify-between items-center mt-8">
+                     <SectionHeader title="Existing Courses" />
+                     {/* 🚀 NEW: Export Button */}
+                     {courses.length > 0 && (
+                        <button
+                            onClick={handleExportToCSV}
+                            className="flex items-center px-4 py-2 text-sm font-medium rounded-lg shadow-md text-white bg-green-600 hover:bg-green-700 transition-colors"
+                            title="Download All Course Data as CSV"
+                        >
+                            <RiFileExcel2Fill className="w-5 h-5 mr-2" /> Export to CSV
+                        </button>
+                    )}
+                </div>
                 
                 {isLoading && <p className="text-center text-teal-600 font-semibold py-4">Loading courses...</p>}
                 {!isLoading && courses.length === 0 && <p className="text-center text-gray-500 py-4">No courses registered yet. Add one above!</p>}
@@ -795,7 +841,7 @@ const CourseManagement = () => {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-teal-700">
                                                 {course.name} <span className="text-gray-500 text-xs font-normal">({course.value})</span>
                                             </td>
-                                            {/* NEW: Display subject count */}
+                                            {/* Display subject count */}
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-700 font-bold">
                                                 {course.subjects?.length || 0}
                                             </td>
@@ -828,7 +874,7 @@ const CourseManagement = () => {
                 )}
             </div>
             
-            {/* --- Delete Confirmation Modal --- */}
+            {/* --- Delete Confirmation Modal (Same as original) --- */}
             {confirmDelete && (
                 <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md">
