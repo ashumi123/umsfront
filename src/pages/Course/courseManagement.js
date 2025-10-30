@@ -304,8 +304,17 @@ const initialFormData = {
     value: '', // Course Code (e.g., BCA)
     school: '', 
     department: '', 
+    semester:'',
     feeStructure: initialFeeStructure,
     subjects: [], // NEW: Array to hold subject objects
+};
+
+const getSession = () => {
+  const semesters = Array.from({ length: 8 }, (_, i) => {
+    const sem = i + 1;
+    return { value: `Semester ${sem}`, label: `Semester ${sem}` };
+  });
+  return semesters;
 };
 
 // --- Helper Components ---
@@ -604,6 +613,26 @@ const CourseManagement = () => {
     // --- End CSV Export Handler ---
     
     // --- Render ---
+
+const SelectField = ({ label, name, value, onChange, options, required = false, cols = 1, disabled = false }) => (
+  <div className={`col-span-1 md:col-span-${cols}`}>
+    <label className="block text-xs font-medium text-gray-700 mb-1">{label}</label>
+    <select
+      name={name}
+      value={value || ''}
+      onChange={onChange}
+      required={required}
+      disabled={disabled}
+      className={`w-full border border-gray-300 rounded-md shadow-sm p-2 text-sm bg-white focus:ring-teal-500 focus:border-teal-500 ${disabled ? 'bg-gray-100 text-gray-500' : 'bg-white'}`}
+    >
+      <option value="" disabled>Select {label}</option>
+      {options.map(opt => (
+        <option key={opt.value} value={opt.value}>{opt.label}</option>
+      ))}
+    </select>
+  </div>
+);
+
     return (
         <div className="bg-gray-50 min-h-screen p-6 sm:p-8">
             <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-2xl p-6 sm:p-8">
@@ -630,13 +659,14 @@ const CourseManagement = () => {
                         <h3 className="text-base font-semibold text-gray-700">Basic Details</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <InputField label="Course Name (e.g., BCA)" name="name" value={formData.name} onChange={handleChange} required />
-                            <InputField 
+                            {/* <InputField 
                                 label="Semester" 
                                 name="value" 
                                 value={formData.semester} 
                                 onChange={handleChange} 
                                 required 
-                            />
+                            /> */}
+                            <SelectField label="Semester" name="semester" value={formData.semester} onChange={handleChange} options={getSession()} required />
                             <InputField 
                                 label="Course Code (Unique)" 
                                 name="value" 
