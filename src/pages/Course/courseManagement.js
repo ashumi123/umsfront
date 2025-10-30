@@ -631,6 +631,13 @@ const CourseManagement = () => {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <InputField label="Course Name (e.g., BCA)" name="name" value={formData.name} onChange={handleChange} required />
                             <InputField 
+                                label="Semester" 
+                                name="value" 
+                                value={formData.semester} 
+                                onChange={handleChange} 
+                                required 
+                            />
+                            <InputField 
                                 label="Course Code (Unique)" 
                                 name="value" 
                                 value={formData.value} 
