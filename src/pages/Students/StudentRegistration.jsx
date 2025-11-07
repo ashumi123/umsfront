@@ -116,8 +116,8 @@ const StudentRegistrationForm = () => {
 
         // Map API response to course options
         const courseOptions = response.data?.map(course => ({
-          value: course?.name,
-          label: course.name,
+          value: course?.name+course?.semester,
+          label: course.name+course?.semester,
           // Extract fees
           admissionFee: Number(course?.feeStructure?.admissionFee) || 0,
           enrollmentFee: Number(course?.feeStructure?.enrollmentFee) || 0,
@@ -308,6 +308,7 @@ const StudentRegistrationForm = () => {
         previousQualifications: formData.previousQualifications.map(({ documentPath, ...rest }) => rest),
         // Include registered subjects, removing the 'maxMarks' field which is UI-only
         registeredSubjects: formData.programSubjects.map(({ maxMarks, ...rest }) => rest),
+        userId:user?.id
       };
 
       const response = await axios.post(API_URL, dataToSend);
@@ -370,7 +371,7 @@ const StudentRegistrationForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <InputField label="Aadhar Number" name="aadharNumber" value={formData.aadharNumber} onChange={handleChange} maxLength={12} placeholder="Must be 12 digits" />
               <InputField label="Designation" name="designation" value={formData.designation} onChange={handleChange} />
-              <InputField label="Enrollment No" name="enrollmentNo" value={formData.enrollmentNo} onChange={handleChange} />
+              {/* <InputField label="Enrollment No" name="enrollmentNo" value={formData.enrollmentNo} onChange={handleChange} /> */}
             </div>
           </div>
 
