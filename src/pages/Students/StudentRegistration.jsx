@@ -116,8 +116,8 @@ const StudentRegistrationForm = () => {
 
         // Map API response to course options
         const courseOptions = response.data?.map(course => ({
-          value: course?.name+course?.semester,
-          label: course.name+course?.semester,
+          value:course?.semester? course?.name+' '+course?.semester:course?.name,
+          label: course?.semester?course.name+' '+course?.semester:course?.name,
           // Extract fees
           admissionFee: Number(course?.feeStructure?.admissionFee) || 0,
           enrollmentFee: Number(course?.feeStructure?.enrollmentFee) || 0,
